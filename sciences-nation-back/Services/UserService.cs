@@ -1,10 +1,11 @@
 ﻿using MongoDB.Driver;
 using sciences_nation_back.Models;
 using sciences_nation_back.Models.Dto;
+using sciences_nation_back.Services.Interfaces;
 
 namespace sciences_nation_back.Services
 {
-	public class UserService
+	public class UserService : IUserService
     {
         private readonly IMongoCollection<User> _userCollection;
 
@@ -13,7 +14,7 @@ namespace sciences_nation_back.Services
             _userCollection = mongoDbService.GetCollection<User>("Users");
         }
 
-        public async Task CreateUserAsync(User user)
+        public async Task<UserDto> CreateUserAsync(User user)
         {
             var existingUser = await _userCollection.Find(u => u.Email == user.Email).FirstOrDefaultAsync();
             if (existingUser != null)
@@ -24,6 +25,15 @@ namespace sciences_nation_back.Services
             user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
 
             await _userCollection.InsertOneAsync(user);
+
+            return new UserDto
+            {
+                Id = user.Id.ToString(),
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                Favorites = user.Favorites
+            };
         }
 
         public async Task<UserDto> GetUserByIdAsync(string id)
@@ -36,7 +46,6 @@ namespace sciences_nation_back.Services
                 return null;
             }
 
-            // Convert the User model to UserDto
             return new UserDto
             {
                 Id = user.Id.ToString(),
@@ -64,4 +73,3 @@ namespace sciences_nation_back.Services
         }
     }
 }
-

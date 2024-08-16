@@ -59,6 +59,14 @@ namespace sciences_nation_back
 
             var app = builder.Build();
 
+            // Statics Files
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(
+                Path.Combine(builder.Environment.ContentRootPath, "assets")),
+                RequestPath = "/assets"
+            });
+
             // HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {

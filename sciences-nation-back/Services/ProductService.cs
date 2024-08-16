@@ -2,9 +2,11 @@
 using MongoDB.Bson;
 using sciences_nation_back.Models;
 using sciences_nation_back.Models.Dto;
+using sciences_nation_back.Services.Interfaces;
+
 namespace sciences_nation_back.Services
 {
-	public class ProductService
+	public class ProductService : IProductService
 	{
 		private readonly IMongoCollection<Product> _productCollection;
 
@@ -21,7 +23,7 @@ namespace sciences_nation_back.Services
 				Id = product.Id.ToString(),
 				Name = product.Name,
 				Price = product.Price,
-				Img = Convert.ToBase64String(product.Img)
+				Img = product.Img
 			}).ToArray();
 		}
 
@@ -39,7 +41,7 @@ namespace sciences_nation_back.Services
                 Id = product.Id.ToString(),
                 Name = product.Name,
                 Price = product.Price,
-                Img = Convert.ToBase64String(product.Img)
+                Img = product.Img
             };
         }
     }

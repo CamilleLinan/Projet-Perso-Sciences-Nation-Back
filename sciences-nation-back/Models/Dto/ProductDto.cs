@@ -1,7 +1,4 @@
-﻿using System;
-using MongoDB.Bson;
-
-namespace sciences_nation_back.Models.Dto
+﻿namespace sciences_nation_back.Models.Dto
 {
 	public class ProductDto
     {

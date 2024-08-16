@@ -1,5 +1,4 @@
-﻿using System;
-namespace sciences_nation_back.Models.Dto
+﻿namespace sciences_nation_back.Models.Dto
 {
 	public class LoginDto
 	{
@@ -7,4 +6,3 @@ namespace sciences_nation_back.Models.Dto
 		public required string Password { get; set; }
 	}
 }
-
