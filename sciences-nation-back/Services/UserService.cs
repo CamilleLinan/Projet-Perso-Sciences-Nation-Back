@@ -38,13 +38,7 @@ namespace sciences_nation_back.Services
 
         public async Task<UserDto> GetUserByIdAsync(string id)
         {
-            var userId = new string(id);
-            var user = await _userCollection.Find(u => u.Id == userId).FirstOrDefaultAsync();
-
-            if (user == null)
-            {
-                return null;
-            }
+            var user = await _userCollection.Find(u => u.Id == id).FirstOrDefaultAsync() ?? throw new Exception("User not found");
 
             return new UserDto
             {
@@ -58,7 +52,7 @@ namespace sciences_nation_back.Services
 
         public async Task<bool> VerifyPasswordAsync(string email, string plainTextPassword)
         {
-            var user = await _userCollection.Find(u => u.Email == email).FirstOrDefaultAsync();
+            var user = await GetUserByEmailAsync(email);
             if (user == null)
             {
                 return false;
@@ -70,6 +64,20 @@ namespace sciences_nation_back.Services
         public async Task<User> GetUserByEmailAsync(string email)
         {
             return await _userCollection.Find(u => u.Email == email).FirstOrDefaultAsync();
+        }
+
+        public async Task<UserDto> UpdateUserAsync(User user)
+        {
+            await _userCollection.ReplaceOneAsync(u => u.Id == user.Id, user);
+
+            return new UserDto
+            {
+                Id = user.Id.ToString(),
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                Favorites = user.Favorites
+            };
         }
     }
 }

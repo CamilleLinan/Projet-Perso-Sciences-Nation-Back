@@ -9,39 +9,37 @@ namespace sciences_nation_back.Services
 	public class ProductService : IProductService
 	{
 		private readonly IMongoCollection<Product> _productCollection;
+		private readonly string _baseUrl;
 
-		public ProductService(MongoDbService mongoDbService)
+		public ProductService(MongoDbService mongoDbService, IConfiguration configuration)
 		{
 			_productCollection = mongoDbService.GetCollection<Product>("Products");
+			_baseUrl = configuration["BaseUrl"] ?? "http://localhost:5011";
 		}
 
 		public async Task<ProductDto[]> GetProductsAsync()
 		{
-			var products = await _productCollection.Find(new BsonDocument()).ToListAsync();
-			return products.Select(product => new ProductDto
+            var products = await _productCollection.Find(new BsonDocument()).ToListAsync() ?? throw new Exception("Products not found");
+
+            return products.Select(product => new ProductDto
 			{
 				Id = product.Id.ToString(),
 				Name = product.Name,
 				Price = product.Price,
-				Img = product.Img
-			}).ToArray();
+				Img = $"{_baseUrl}{product.Img}"
+            }).ToArray();
 		}
 
         public async Task<ProductDto> GetProductByIdAsync(string id)
         {
-			var productId = new string(id);
-            var product = await _productCollection.Find(p => p.Id == productId).FirstOrDefaultAsync();
-            if (product == null)
-            {
-                return null;
-            }
+            var product = await _productCollection.Find(p => p.Id == id).FirstOrDefaultAsync() ?? throw new Exception("Product not found");
 
             return new ProductDto
             {
                 Id = product.Id.ToString(),
                 Name = product.Name,
                 Price = product.Price,
-                Img = product.Img
+                Img = $"{_baseUrl}{product.Img}"
             };
         }
     }

@@ -1,6 +1,6 @@
-﻿namespace sciences_nation_back.Models.Dto
+﻿namespace sciences_nation_back.Models
 {
-	public class LoginDto
+	public class Login
 	{
 		public required string Email { get; set; }
 		public required string Password { get; set; }

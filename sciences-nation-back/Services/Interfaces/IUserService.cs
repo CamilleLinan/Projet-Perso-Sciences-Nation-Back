@@ -9,5 +9,6 @@ namespace sciences_nation_back.Services.Interfaces
         Task<UserDto> GetUserByIdAsync(string id);
         Task<bool> VerifyPasswordAsync(string email, string password);
         Task<User> GetUserByEmailAsync(string email);
+        Task<UserDto> UpdateUserAsync(User user);
     }
 }

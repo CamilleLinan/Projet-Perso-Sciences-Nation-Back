@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using sciences_nation_back.Services;
-using sciences_nation_back.Models;
-using sciences_nation_back.Models.Dto;
+using sciences_nation_back.Services.Interfaces;
 
 namespace sciences_nation_back.Controllers
 {
@@ -9,13 +7,11 @@ namespace sciences_nation_back.Controllers
 	[Route("api/[controller]")]
 	public class ProductController : ControllerBase
 	{
-		private readonly ProductService _productService;
-		private readonly JwtService _jwtService;
+		private readonly IProductService _productService;
 
-		public ProductController(ProductService productService, JwtService jwtService)
+		public ProductController(IProductService productService)
 		{
 			_productService = productService;
-			_jwtService = jwtService;
 		}
 
 		[HttpGet("all")]
@@ -27,4 +23,3 @@ namespace sciences_nation_back.Controllers
 		}
 	}
 }
-

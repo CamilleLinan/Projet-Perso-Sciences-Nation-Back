@@ -18,20 +18,20 @@
     <PackageReference Include="JWT" Version="10.1.1" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.20" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+    <PackageReference Include="AutoMapper" Version="12.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <None Remove="Services\" />
     <None Remove="Models\" />
     <None Remove="Models\Dto\" />
-    <None Remove="Assets\" />
     <None Remove="Services\Interfaces\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Services\" />
     <Folder Include="Models\" />
     <Folder Include="Models\Dto\" />
-    <Folder Include="Assets\" />
     <Folder Include="Services\Interfaces\" />
   </ItemGroup>
 </Project>

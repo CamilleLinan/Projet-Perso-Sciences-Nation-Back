@@ -1,10 +1,9 @@
 ﻿using MongoDB.Driver;
 using sciences_nation_back.Models;
-using sciences_nation_back.Services.Interfaces;
 
 namespace sciences_nation_back.Services
 {
-    public class MongoDbService : IMongoDbService
+    public class MongoDbService
     {
         private readonly IMongoDatabase _database;
 
