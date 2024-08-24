@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using sciences_nation_back.Models;
+using sciences_nation_back.Services;
 using sciences_nation_back.Services.Interfaces;
 
 namespace sciences_nation_back.Controllers
@@ -17,9 +19,29 @@ namespace sciences_nation_back.Controllers
 		[HttpGet("all")]
 		public async Task<IActionResult> GetAll()
 		{
-			var productsDto = await _productService.GetProductsAsync();
-
-			return Ok(productsDto);
+            try
+            {
+                var productsDto = await _productService.GetProductsAsync();
+                return Ok(productsDto);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
 		}
-	}
+
+		[HttpGet("{productId}")]
+        public async Task<IActionResult> GetById(string productId)
+        {
+            try
+            {
+                var productDto = await _productService.GetProductByIdAsync(productId);
+                return Ok(productDto);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+    }
 }
