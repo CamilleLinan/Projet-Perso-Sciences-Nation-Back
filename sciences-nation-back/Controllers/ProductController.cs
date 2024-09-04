@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using sciences_nation_back.Models;
-using sciences_nation_back.Services;
 using sciences_nation_back.Services.Interfaces;
 
 namespace sciences_nation_back.Controllers
