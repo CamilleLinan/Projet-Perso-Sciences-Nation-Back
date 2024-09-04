@@ -16,6 +16,6 @@ namespace sciences_nation_back.Models
         public required string Price { get; set; }
 
         [BsonElement("img")]
-        public required byte[] Img { get; set; }
+        public required string Img { get; set; }
 	}
 }

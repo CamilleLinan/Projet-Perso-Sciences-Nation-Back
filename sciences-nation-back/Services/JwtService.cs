@@ -2,10 +2,11 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using sciences_nation_back.Services.Interfaces;
 
 namespace sciences_nation_back.Services
 {
-	public class JwtService
+	public class JwtService : IJwtService
     {
         private readonly IConfiguration _configuration;
 

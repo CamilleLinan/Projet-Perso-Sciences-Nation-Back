@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using sciences_nation_back.Services;
+using sciences_nation_back.Services.Interfaces;
 using sciences_nation_back.Models;
-using sciences_nation_back.Models.Dto;
 
 namespace sciences_nation_back.Controllers
 {
@@ -9,16 +8,16 @@ namespace sciences_nation_back.Controllers
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
-        private readonly UserService _userService;
-        private readonly JwtService _jwtService;
+        private readonly IUserService _userService;
+        private readonly IJwtService _jwtService;
 
-        public UserController(UserService userService, JwtService jwtService)
+        public UserController(IUserService userService, IJwtService jwtService)
         {
             _userService = userService;
             _jwtService = jwtService;
         }
 
-        [HttpPost]
+        [HttpPost("create")]
         public async Task<IActionResult> CreateUser([FromBody] User newUser)
         {
             if (newUser == null)
@@ -51,21 +50,21 @@ namespace sciences_nation_back.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
+        public async Task<IActionResult> Login([FromBody] Login login)
         {
-            if (loginDto == null)
+            if (login == null)
             {
                 return BadRequest("Login details cannot be null.");
             }
 
-            var isValidUser = await _userService.VerifyPasswordAsync(loginDto.Email, loginDto.Password);
+            var isValidUser = await _userService.VerifyPasswordAsync(login.Email, login.Password);
 
             if (!isValidUser)
             {
                 return Unauthorized(new { message = "Invalid email or password." });
             }
 
-            var user = await _userService.GetUserByEmailAsync(loginDto.Email);
+            var user = await _userService.GetUserByEmailAsync(login.Email);
             var token = _jwtService.GenerateToken(user.Id, user.Email);
 
             return Ok(new { user.Id, token });

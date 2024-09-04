@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using sciences_nation_back.Services;
+using sciences_nation_back.Services.Interfaces;
 
 namespace sciences_nation_back
 {
@@ -21,6 +22,27 @@ namespace sciences_nation_back
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            // Configure CORS
+            builder.Services.AddCors(options =>
+            {
+                //options.AddPolicy("AllowSpecificOrigins",
+                //builder =>
+                //{
+                //    builder.WithOrigins("http://localhost:5173")
+                //           .AllowAnyHeader()
+                //           .AllowAnyMethod()
+                //           .AllowCredentials();
+                //});
+
+                options.AddPolicy("AllowAll",
+                builder =>
+                {
+                    builder.AllowAnyOrigin()
+                           .AllowAnyHeader()
+                           .AllowAnyMethod();
+                });
+            });
+
             // Get environment variables
             var connectionString = Environment.GetEnvironmentVariable("MONGO_CONNECTION_STRING");
             var databaseName = Environment.GetEnvironmentVariable("MONGO_DATABASE_NAME");
@@ -33,9 +55,13 @@ namespace sciences_nation_back
             {
                 return new MongoDbService(connectionString, databaseName);
             });
-            builder.Services.AddSingleton<JwtService>();
-            builder.Services.AddSingleton<UserService>();
-            builder.Services.AddSingleton<ProductService>();
+            builder.Services.AddSingleton<IJwtService, JwtService>();
+            builder.Services.AddSingleton<IUserService, UserService>();
+            builder.Services.AddSingleton<IProductService, ProductService>();
+            builder.Services.AddSingleton<IFavoriteService, FavoriteService>();
+
+            // Register AutoMapper
+            builder.Services.AddAutoMapper(typeof(MappingProfile));
 
             // Configure JWT authentication
             builder.Services.AddAuthentication(options =>
@@ -59,6 +85,14 @@ namespace sciences_nation_back
 
             var app = builder.Build();
 
+            // Statics Files
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(
+                Path.Combine(builder.Environment.ContentRootPath, "assets")),
+                RequestPath = "/assets"
+            });
+
             // HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -66,8 +100,14 @@ namespace sciences_nation_back
                 app.UseSwaggerUI();
             }
 
-            app.UseHttpsRedirection();
+            // Use CORS middleware
+            app.UseCors("AllowAll");
+
+            //app.UseHttpsRedirection();
+
+            app.UseAuthentication();
             app.UseAuthorization();
+
             app.MapControllers();
             app.Run();
         }
